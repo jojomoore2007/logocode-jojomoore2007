@@ -1,0 +1,72 @@
+setpalette  8 "#0000000f
+setpalette  9 "#0000ff0f
+setpalette 10 "#00ff000f
+setpalette 11 "#00ffff0f
+setpalette 12 "#ff00000f
+setpalette 13 "#ff00ff0f
+setpalette 14 "#ffff000f
+setpalette 15 "#ffffff0f
+setscrunch 1 1
+window
+setbg "#ffffffff
+pu
+cs
+ct
+make "px 50
+make "py 42.5
+make "w 200
+make "h 200
+pu
+setpensize 1
+make "p 0
+setpencolor 0
+ppt
+setxy :px-:w :py-:h
+pd
+setxy :px-:w :py+:h
+setxy :px+:w :py+:h
+setxy :px+:w :py-:h
+setxy :px-:w :py-:h
+pu
+make "p 8
+setpencolor 8
+ht
+for [i 1 16384] [
+  ct
+  show :i
+  pu
+  make "z :i
+  make "n 0
+  setxy :px :py
+  setpensize 100/(2^int(log10(:i)/log10(4)))
+  ;cs
+  pd
+  make "p :i%8
+  while [:z > 1] [
+    make "bit :z%2
+    make "x xcor-:px
+    make "y ycor-:py
+  	make "p ((:bit+:p)%8)
+    setpencolor 8+:p
+    ;seth towards ( list :px :py )
+    ;arc 180 (sqrt( ( :x * :x ) + ( :y * :y ) ))
+    make "rx 0;(random -1024 1025)/1024
+    make "ry 0;(random -1024 1025)/1024
+    setpos case (:n%4) [
+      [[0] ( list ( :px + :x ) ( :py + ( ( :y - :h + ( 2 * :h * :bit ) ) / 2 ) ) ) ]
+      [[1] ( list ( :px + ( ( :x - :w + ( 2 * :w * :bit ) ) / 2 ) ) ( :py + :y ) ) ]
+      [[2] ( list ( :px + :x ) ( :py + ( ( :y + :h - ( 2 * :h * :bit ) ) / 2 ) ) ) ]
+      [[3] ( list ( :px + ( ( :x + :w - ( 2 * :w * :bit ) ) / 2 ) ) ( :py + :y ) ) ]
+    ]
+    make "n :n+1
+    make "z int (:z/2)
+  ]
+  ;setpencolor 8
+  ;setpensize 0.1
+  ;make "x xcor-:px
+  ;make "y ycor-:py
+  ;seth towards ( list :px :py )
+  ;arc 360 (2*sqrt( ( :x * :x ) + ( :y * :y ) ))
+  ;setpensize 1
+  ;arc 360 1
+]
